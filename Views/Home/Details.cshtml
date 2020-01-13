@@ -1,0 +1,27 @@
+﻿@model HomeDetailsViewModel
+@{ 
+    var photopath = "~/Images/" + (Model.Movie.PhotoPath ?? "moviecollageHollywood.jpg");
+ }
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card-header">
+            <h1>@Model.Movie.Title</h1>
+        </div>
+     
+        <div class="card-body text-center">
+            <img class="card-img-top" src="@photopath" asp-append-version="true" style="height:200px;width:200px" />
+
+            <h4>Name: @Model.Movie.Title</h4>
+            <h4>Genre: @Model.Movie.Genre</h4>
+            <h4>Rating: @Model.Movie.Rating</h4>
+            <h4>Price: $@Model.Movie.Price</h4>
+            <h4>Release Date: @Model.Movie.ReleaseDate</h4>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Back</a>
+            <a asp-controller="Home" asp-action="Details" asp-route-id=" @Model.Movie.ID" class="btn btn-primary">Edit</a>
+            <a asp-controller="Home" asp-action="Details" asp-route-id=" @Model.Movie.ID" class="btn btn-primary">Delete</a>
+
+        </div>
+    </div>
+</div>
