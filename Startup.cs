@@ -10,6 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MovieManagement.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace MovieManagement
 {
@@ -31,7 +34,18 @@ namespace MovieManagement
             services.AddDbContextPool<AppDbContext>(options =>
           options.UseSqlServer("Data Source=W717PC0JK0QN\\SQLEXPRESS123;database=MovieDB;Integrated Security=True"));
 
-            services.AddControllersWithViews();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            //apply authorize globally to each controller action except ones decorated allowAnonymous
+            services.AddMvc(options=>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                            .RequireAuthenticatedUser()
+                            .Build();
+
+                options.Filters.Add(new AuthorizeFilter(policy));
+             }).AddXmlSerializerFormatters();
 
             services.AddTransient<IMovieRepository, SqlMovieRepository>();//Change Mockrepository to sqlrepository
            
@@ -53,6 +67,7 @@ namespace MovieManagement
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseAuthentication();
 
             app.UseRouting();
 
